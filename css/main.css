@@ -1,0 +1,424 @@
+body {
+	color: #484848;
+	background:#e4f1f4 url('../img/bg-gradient.png') top left repeat-x;
+	font-family: "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
+	font-size: 14px;
+}
+
+div#main {
+	width:100%;
+	background: url('../img/pattern-header.png') top left repeat-x;
+	height:160px;
+	min-width: 1187px;
+}
+
+input, textarea {
+	font: normal 1em 'Trebuchet MS', Tahoma, sans-serif;
+	color:#637277;
+	border:1px solid #e6e6e6;
+	background:#fff url('/img/bg-input.png') bottom left repeat-x;
+}
+
+input {
+	height:25px;
+	padding:8px 5px 0 5px;
+}
+
+label {
+	margin:10px 0 5px 0;
+	width: 100px;
+	font-weight:bold;
+}
+
+fieldset {
+	margin: 20px 0 20px 0;
+}
+/* -------------------------------------------------------------
+	Reset
+------------------------------------------------------------- */
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6,
+pre, form, fieldset, input, p, blockquote, table, th, td {
+	margin: 0;
+	padding: 0;
+}
+
+fieldset, img, abbr {
+	border: 0;
+}
+
+address, caption, cite, code, dfn, em, h1, h2, h3,
+h4, h5, h6, strong, th, var {
+	font-style: normal;
+	font-weight: normal;
+}
+
+caption, th {
+	text-align: left;
+}
+
+a {
+	text-decoration: none;
+	outline:none;
+}
+
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+/* -------------------------------------------------------------
+	Header
+------------------------------------------------------------- */
+
+div#header {
+	width:987px;
+	height:150px;
+	background: url('../img/') top left no-repeat;
+}
+
+div#header h1 a {
+	display: inline;
+	float:left;
+	/*background: url('../img/imtools.png') top left no-repeat;*/
+	width: 500px;
+	height: 130px;
+	margin:24px 0 0 80px;
+	/*text-indent: -9999px;*/
+}
+
+/* -------------------------------------------------------------
+	login
+------------------------------------------------------------- */
+
+div#header #login {
+	float:right;
+	margin:15px 0 0 0;
+}
+
+
+#login {
+	background:url('../img/login.gif') no-repeat;
+	display:block;
+	color:#ffffff;
+	font:bold 0.9em Arial, Helvetica, "Nimbus Sans L Regular", sans-serif;
+	text-decoration:none;
+	width:130px;
+	height:20px;
+	padding:0px 0 0 8px;
+}
+
+
+/* -------------------------------------------------------------
+	left_body
+------------------------------------------------------------- */
+
+#left_body {
+	/*float:left;*/
+	width:250px;
+	padding:10px 0 0 60px;
+	font-size:0.9em;
+}
+
+ul.navigation  {
+   	list-style:none;
+	margin:0 0 10px 0;
+	font-size:16px;
+	font-weight:bold;
+}
+
+.navigation li {
+	height:40px;
+	background:url('../img/navigation-middle.png') top left repeat-y;
+}
+
+.navigation li#first {
+	height:40px;
+	padding-top:16px;
+	background:url('../img/navigation-top.png') top left no-repeat;
+}
+
+.navigation li#last {
+	height:58px;
+	background:url('../img/navigation-bottom.png') bottom left no-repeat;
+}
+
+.navigation li strong {
+	display:block;
+	font-weight:bold;
+	color:#427fbc !important;
+	height:33px;
+	width:236px;
+	background:url('../img/indicator.gif') center right no-repeat;
+}
+
+.navigation li a:link,
+.navigation li a:visited {
+	width:178px;
+	display:block;
+	color:#637277; /*819297*/
+	text-decoration:none;
+	padding:12px 10px 7px 40px;
+}
+
+.navigation li strong a,
+.navigation li a:hover {
+	color:#427fbc !important;
+
+}
+
+.navigation li a#home {
+	background:url('../img/icon-home.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#ip-address {
+	background:url('../img/junk_email_filter_icon.jpg') 15px 13px no-repeat;
+}
+
+.navigation li a#owndata {
+	background:url('../img/owndata.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#ping {
+	background:url('/img/icon-ping.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#whois {
+	background:url('/img/icon-whois.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#portscan {
+	background:url('/img/icon-portscanner.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#reverse-ip {
+	background:url('/img/icon-reverseip.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#http-header {
+	background:url('/img/icon-httpheader.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#pagerank {
+	background:url('/img/icon-pagerank.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#domain-name-system {
+	background:url('/img/icon-dns.gif') 15px 13px no-repeat;
+}
+
+.navigation li a#dropped-domains {
+	background:url('/img/icon-droppeddomains.gif') 15px 13px no-repeat;
+}
+
+/* -------------------------------------------------------------
+	Content
+------------------------------------------------------------- */
+
+#content_body h1 {
+	font-size:28px;
+	float:left;
+}
+
+
+#content_body div#title {
+	height:51px;
+	color:#99cc33;
+	margin:0 0 0 -25px;
+	padding:18px 30px 0 25px;
+	background:url('../img/content-top.gif') top left no-repeat;
+	/*border:1px solid blue;*/
+}
+
+
+#content_body {
+	/*float:left;*/
+	position:absolute;
+	left:310px;
+	top:150px;
+	width:650px;
+	background:url('../img/content-middle.gif') top left repeat-y;
+	margin-top:10px;
+	padding:0 0 0 25px;
+}
+
+div#front {
+	float:right;
+	background:url('/img/front-terminal.jpg') top right no-repeat;
+	width:245px;
+	height:168px;
+	margin:15px 20px 5px 15px;
+}
+
+#content_body p {
+	margin:25px 30px 0 0;
+	line-height: 1.5em;
+}
+
+#content_body div#box {
+	background:url('../img/content-bottom.png') bottom left no-repeat;
+	margin:0 0 0 -25px;
+	padding:0 0 30px 25px;
+}
+
+
+/* -------------------------------------------------------------
+	right_body
+------------------------------------------------------------- */
+
+#right_body {
+	position:absolute;
+	left:990px;
+	top:150px;
+	width:160px;
+	margin-top:10px;
+	padding:0 0 0 20px;
+}
+
+/* -------------------------------------------------------------
+	footer
+------------------------------------------------------------- */
+
+#footer {
+	align:center;
+	color:#8c9497;
+	font-size:10px;
+	width:987px;
+	height:100px;
+}
+
+
+/* -------------------------------------------------------------
+	login popup
+------------------------------------------------------------- */
+
+
+#mask, #mask-signup, #mask-editnote, #mask-loading {
+	display: none;
+	background: #000; 
+	position: fixed; left: 0; top: 0; 
+	z-index: 10;
+	width: 100%; height: 100%;
+	opacity: 0.8;
+	z-index: 999;
+}
+
+.login-popup,.signup-popup, .editnote-popup, .loading-popup, .profile-popup{
+	display:none;
+	background: #333;
+	padding: 10px; 	
+	border: 2px solid #ddd;
+	float: left;
+	font-size: 1.2em;
+	position: fixed;
+	top: 50%; left: 50%;
+	z-index: 99999;
+	box-shadow: 0px 0px 20px #999;
+	-moz-box-shadow: 0px 0px 20px #999; /* Firefox */
+    -webkit-box-shadow: 0px 0px 20px #999; /* Safari, Chrome */
+	border-radius:3px 3px 3px 3px;
+    -moz-border-radius: 3px; /* Firefox */
+    -webkit-border-radius: 3px; /* Safari, Chrome */
+}
+
+img.btn_close {
+	float: right; 
+	margin: -28px -28px 0 0;
+}
+
+fieldset { 
+	border:none; 
+}
+
+form.signin .textbox label , form.signup .textbox label { 
+	display:block; 
+	padding-bottom:7px; 
+}
+
+form.signin .textbox span, form.signup .textbox span { 
+	display:block;
+}
+
+form.signin p, form.signin span ,form.signup p, form.signup span { 
+	color:#999; 
+	font-size:11px; 
+	width:200px;
+	line-height:18px;
+} 
+
+form.signin .textbox input, form.signup .textbox input { 
+	background:#666666; 
+	border-bottom:1px solid #333;
+	border-left:1px solid #000;
+	border-right:1px solid #333;
+	border-top:1px solid #000;
+	color:#fff; 
+	border-radius: 3px 3px 3px 3px;
+	-moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+	font:13px Arial, Helvetica, sans-serif;
+	padding:6px 6px 4px;
+	width:200px;
+}
+
+form.signin input:-moz-placeholder, form.signup input:-moz-placeholder { color:#bbb; text-shadow:0 0 2px #000; }
+form.signin input::-webkit-input-placeholder, form.signup input::-webkit-input-placeholder { color:#bbb; text-shadow:0 0 2px #000;  }
+
+.button { 
+	background: -moz-linear-gradient(center top, #f3f3f3, #dddddd);
+	background: -webkit-gradient(linear, left top, left bottom, from(#f3f3f3), to(#dddddd));
+	background:  -o-linear-gradient(top, #f3f3f3, #dddddd);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f3f3f3', EndColorStr='#dddddd');
+	border-color:#000; 
+	border-width:1px;
+	border-radius:4px 4px 4px 4px;
+	-moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+	color:#333;
+	cursor:pointer;
+	display:inline-block;
+	padding:6px 6px 4px;
+	margin-top:10px;
+	font:12px; 
+	width:214px;
+}
+
+.button:hover { background:#ddd; }
+
+.listemails {
+	border-collapse: collapse;
+}
+
+.listemails td {
+	border:1px solid #D4D4D4;
+	padding:0 3px 0 3px;
+	word-wrap: break-word;
+}
+
+.listemails th {
+    background-color: #555555;
+    border: 1px solid #555555;
+    color: #FFFFFF;
+    font-size: 12px;
+    padding: 3px;
+    text-align: left;
+    vertical-align: top;
+}
+.listemails tr:nth-child(2n) {
+    background-color: #FFFFFF;
+}
+.listemails tr:nth-child(2n+1) {
+    background-color: #F6F4F0;
+}
+
+.sort_asc:after {
+	content: "▲";
+}
+.sort_desc:after {
+	content: "▼";
+}
+
+

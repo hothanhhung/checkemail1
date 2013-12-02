@@ -49,7 +49,7 @@
 							<a href="#"  class="dropboxli" >Quản thành viên</a>
 							<ul class="sub-menu">
 							<?php if(isset($managerlevel) && $managerlevel=="1"){?>
-								<a href="">
+								<a href="<?php echo base_url()?>index.php/manager/employee/">
 									<li>
 										Quản lý nhân sự
 									</li>

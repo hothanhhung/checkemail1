@@ -15,7 +15,9 @@
 			$manager = $this->session->userdata('managerlogin');
 			if(isset($manager) && $manager!="")
 			{
-				$this->load->view("manager/manager_template"); 
+				$managerlevel = $this->session->userdata('managerloginlevel');
+				$temp['managerlevel']=$managerlevel;
+				$this->load->view("manager/manager_template",$temp); 
 			}else header('Location: '. base_url('index.php/manager/index/login'));
 		}
 		

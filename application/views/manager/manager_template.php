@@ -63,21 +63,23 @@
 							</ul>
 						</li>
 						
+						<?php if(isset($managerlevel) && $managerlevel=="1"){?>
 						<li <?php if(isset($index)&&$index==2) echo 'style="background: #E6E6E6;"';?>>
-							<a href="#"  class="dropboxli" >Quản liên lạc</a>
+							<a href="#"  class="dropboxli" >Quản hệ thống</a>
 							<ul class="sub-menu">
-								<a href="">
+								<a href="<?php echo base_url()?>index.php/manager/general/">
 									<li>
-										Quản lý chung
+										Các trang tĩnh
 									</li>
 								</a>
-								<a href="">
+								<a href="<?php echo base_url()?>index.php/manager/emailconfig/">
 									<li>
-										Sử dụng điều kiện lọc
+										Cấu hình gửi thư
 									</li>
 								</a>
 							</ul>
 						</li>
+						<?php } ?>
 						<li <?php if(isset($index)&&$index==3) echo 'style="background: #E6E6E6;"';?>>
 							<a href="#"  class="dropboxli">Quản lý template</a>
 							<ul class="sub-menu">

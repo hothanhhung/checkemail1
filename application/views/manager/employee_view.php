@@ -1,6 +1,75 @@
 <div style="padding: 0px 10px 10px 10px">
 	<p>
 		<div id="title">
+			<h1>Thêm nhân viên</h1>		
+		</div>
+		<div style="padding:5px 5px 5px 5px; border:1px solid;border-radius:5px;border-color:gray;background-color:#ffsfef; " align="center">
+			<form id="faddContact" action='<?php echo base_url()?>index.php/manager/employee/' method="post" >
+				<b>
+				<table style="border-spacing: 15px 0;"><tr>
+					<td>
+						<span>Tên tài khoản</span><br/>
+						<input id="txtUserNameMemberAdd" name="txtUserNameMemberAdd" type="text" value="" style="width:200px"/>
+					</td>
+					<td>
+						<span>Họ và tên</span><br/>
+						<input id="txtFullNameMemberAdd" name="txtFullNameMemberAdd" type="text" value="" style="width:200px" />
+					</td>
+					<td>
+						<span>Số điện thoại</span><br/>
+						<input id="txtPhoneMemberAdd" name="txtPhoneMemberAdd" type="text" value="" style="width:200px" />
+					</td>
+					<td>
+						<span>Cấp bậc</span><br/>
+						<select  name="sbLevelAdd" id="sbLevelAdd" style="width:200px">
+								<option value="1">cấp 1</option>
+								<option value="2" selected >cấp 2</option>
+								<option value="3">cấp 3</option>
+								<option value="4">cấp 4</option>
+								<option value="5">cấp 5</option>
+						</select>
+					</td>
+					<td>
+						<div id="status-memberAdd" name="status-memberAdd" style="color:red;font-size: 0.9em;">
+							<?php if(isset($result_addemployee))
+								 echo $result_addemployee; 
+							?>
+						</div>	
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span>Mật khẩu</span><br/>
+						<input id="txtPasswordMemberAdd" name="txtPasswordMemberAdd" type="password" value="" style="width:200px"/>
+					</td>
+					<td>
+						<span>Xác nhận mật khẩu</span><br/>
+						<input id="txtPasswordAgainMemberAdd" name="txtPasswordAgainMemberAdd" type="password" value="" style="width:200px"/>
+					</td>
+					<td>
+						<span>Ghi chú</span><br/>
+						<input id="txtnoteAdd" name="txtnoteAdd" type="text" value="" style="width:200px" />
+					</td>
+					<td>
+						<span>Trạng thái</span><br/>
+						<select  name="sbStatusAdd" id="sbStatusAdd" style="width:200px">
+								<option value="1">Kích hoạt</option>
+								<option value="2">Khóa</option>
+						</select>					
+					</td>
+					<td>								
+						<input id="btMemberAdd" value="Thêm nhân viên" type="submit"  class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
+					</td>
+				</tr></table>		
+				</b>
+				
+				<br/>
+				
+			</form>
+		</div>
+		<br/>
+		
+		<div id="title">
 			<h1>Danh sách nhân viên</h1>		
 		</div>
 		<span class="explaindetail"> Có tất cả <?php if(isset($numberemployees)) echo $numberemployees; else echo "0"?> người dùng</span>
@@ -147,8 +216,9 @@
 					
 			  </form>
 			</div>
+			
 			<div>
-				<form method="post" action="<?php echo base_url()?>index.php/manager/member">
+				<form method="post" action="<?php echo base_url()?>index.php/manager/employee">
 					<span></span>					
 					&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;Số lượng hiển thị
 					<select  name="numberperpage" onchange="form.submit();">

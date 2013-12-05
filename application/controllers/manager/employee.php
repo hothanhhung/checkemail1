@@ -12,11 +12,15 @@
 		
 		public function index()
 		{
-			
 			$manager = $this->session->userdata('managerlogin');
 			$managerlevel = $this->session->userdata('managerloginlevel');
 			if(isset($manager) && $manager != "" && isset($managerlevel) && $managerlevel=="1")
 			{
+			//print_r($_POST);
+				if(isset($_POST['txtUserNameMemberAdd']) && isset($_POST['txtFullNameMemberAdd']) && isset($_POST['sbLevelAdd']) && isset($_POST['sbStatusAdd']) && isset($_POST['txtPasswordMemberAdd']) && isset($_POST['txtPasswordAgainMemberAdd']))
+				{
+					$temp['result_addemployee'] = $this->Employee_Model->addemployee($_POST['txtUserNameMemberAdd'], $_POST['txtFullNameMemberAdd'], $_POST['txtnoteAdd'], $_POST['txtPhoneMemberAdd'], $_POST['sbLevelAdd'], $_POST['sbStatusAdd'], $_POST['txtPasswordMemberAdd'], $_POST['txtPasswordAgainMemberAdd']);
+				}
 				$temp['managerlevel']=$managerlevel;
 				$numperpage = $this->session->userdata('numberperpage');
 				if(!isset($numperpage) || $numperpage == "") $numperpage=10;
@@ -61,7 +65,6 @@
 				header('Location: '. base_url('index.php/manager/index/login'));
 			}
 		}
-		
 		
 		
 		public function setorderparameter()

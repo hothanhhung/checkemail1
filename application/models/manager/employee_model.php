@@ -59,5 +59,39 @@
 			
 		}
 		
+		public function addEmployee($username, $name, $note, $phone, $level, $status, $password, $passwordAgain)
+		{
+			if(isset($username) && $username!="" && isset($name) && $name!="" && isset($password) && $password!="")
+			{
+				$this->db->where('UserName',$username);
+				$result=$this->db->get('manager');
+				$ss=$result->result_array();
+				if(isset($ss[0]))
+					return "Tài khoản đã tồn tại";
+				else if($password != $passwordAgain) return "Mật khẩu xác nhận không đúng";
+				else
+				{
+					if(!isset($note)) $note="";
+					if(!isset($phone)) $phone="";
+					$data = array(
+							'UserName' => $username,
+							'FullName' => $name,
+							'MobilePhone' => $phone,
+							'Note' => $note,
+							'Level' => $level,
+							'Status' => $status,
+							'Password' => $password,
+						   'CreatedDate' => date('Y-m-d H:i:s'),
+						   'UpdatedDate' => date('Y-m-d H:i:s')
+							);
+						$this->db->where('UserName', $username);
+						$this->db->insert('manager', $data);
+						
+					return "Đã thêm nhân viên thành công";
+				}
+			}
+		}
+		
+		
 	}
 ?>

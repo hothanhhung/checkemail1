@@ -49,7 +49,7 @@
 						</select>					
 					</td>
 					<td>								
-						<input id="btemailconfigAdd" value="Thêm email gửi thư" type="submit"  class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
+						<input id="btemailconfigAdd" value="Thêm email gửi thư" type="submit" onclick="addinforemailconfig(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
 					</td>
 				</tr></table>		
 				</b>
@@ -74,7 +74,35 @@
 			if(!isset($sort_by)) $sort_by="";
 			if(!isset($sort_order)) $sort_order="";
 		?>
-			<script type="text/javascript">				
+			<script type="text/javascript">	
+				
+				function addinforemailconfig()
+				{
+					if($('#txtPasswordEmailConfigAdd').val()!=$('#txtPasswordAgainEmailConfigAdd').val())
+					{
+						alert("Mật khẩu xác nhận không đúng");
+						return;
+					}
+					$('#status-emailconfigAdd').html('<img border="0" alt="" src="<?php echo base_url()?>/img/loading_circle.gif"></img>');
+					$.ajax({
+					type: "POST",
+					url: "<?php echo base_url()?>index.php/manager/emailconfig/addemailconfig",
+					data: { Email: $('#txtAddressEmailConfigAdd').val(), Protocol:$('#txtProtocolEmailConfigAdd').val(), smtp_host:$('#txtSMTPHostEmailConfigAdd').val(),smtp_port:$('#txtSMTPPortEmailConfigAdd').val(),NumberSendPerDate:$('#txtNumberSendPerDateEmailConfigAdd').val(), Password:$('#txtPasswordEmailConfigAdd').val(), note:$('#txtNoteEmailConfigAdd').val(), status:$('#sbStatusEmailConfigAdd :selected').val() },
+					dataType: "json"
+					})
+					.done(function( msg ) {
+						if(msg.ErrorCode=="0"){
+							window.open(window.location.pathname,"_self");
+						}
+						else {
+							$('#status-emailconfigAdd').html('<b>'+msg.Infor+'</b>');
+						}
+					}) 
+					.fail(function() {
+						$('#status-emailconfigAdd').html('<b>Lỗi kết nối server</b>');
+					});
+				}
+				
 				function setorderparameter(by)
 				{
 					$.ajax({
@@ -91,20 +119,30 @@
 						});
 				}				
 				
-				function getdatatoedit(idemailconfig)
+				function duplicateemailconfig(idemailconfig)
 				{
 					$.ajax({
 					type: "POST",
-					url: "<?php echo base_url()?>index.php/manager/employee/getinforemailconfig",
-					data: { ID: idemailconfig },
+					url: "<?php echo base_url()?>index.php/manager/emailconfig/getinforemailconfig",
+					data: { email: idemailconfig },
 					dataType: "json"
 					})
 					.done(function( msg ) {
-						if(msg=="0" || msg=="1"){
-							alert('Không tìm thấy liên lạc này');
+					
+						if(msg.ErrorCode!="0"){
+							alert(msg.Infor);
 						}
 						else {
-							editemailconfigwindowclick(msg.FullName,msg.UserName, msg.MobilePhone, msg.Level, msg.Status, msg.Note);
+							$('#status-emailconfigAdd').html(msg.Infor);
+							$('#txtAddressEmailConfigAdd').val("");
+							$('#txtProtocolEmailConfigAdd').val(msg.Protocol);
+							$('#txtSMTPHostEmailConfigAdd').val(msg.smtp_host);
+							$('#txtSMTPPortEmailConfigAdd').val(msg.smtp_port);
+							$('#txtNumberSendPerDateEmailConfigAdd').val(msg.NumberSendPerDate);
+							$('#txtPasswordEmailConfigAdd').val(msg.Password);
+							$('#txtPasswordAgainEmailConfigAdd').val(msg.Password);
+							$('#txtNoteEmailConfigAdd').val(msg.Note);
+							$('#sbStatusEmailConfigAdd :selected').val(msg.status);
 						}
 					}) 
 					.fail(function() {
@@ -112,14 +150,38 @@
 					});
 				}
 				
-				function editemailconfigwindowclick(name,username,phone,level,status,note) 
+				function getdatatoedit(idemailconfig)
 				{
-					$('#txtFullNameemailconfig').val(name);
-					$('#txtUserNameemailconfig').val(username);
-					$('#txtPhoneemailconfig').val(phone);
+					$.ajax({
+					type: "POST",
+					url: "<?php echo base_url()?>index.php/manager/emailconfig/getinforemailconfig",
+					data: { email: idemailconfig },
+					dataType: "json"
+					})
+					.done(function( msg ) {
+					
+						if(msg.ErrorCode!="0"){
+							alert(msg.Infor);
+						}
+						else {
+							editemailconfigwindowclick(msg.Email,msg.Protocol,msg.smtp_host,msg.smtp_port,msg.NumberSendPerDate,msg.Password,msg.status,msg.Note) 
+						}
+					}) 
+					.fail(function() {
+						alert('Có lỗi khi kết nối tới server');
+					});
+				}
+				
+				function editemailconfigwindowclick(Email,Protocol,smtp_host,smtp_port,NumberSendPerDate,Password,status,note) 
+				{
+					$('#txtEmailEmailConfig').val(Email);
+					$('#txtProtocolEmailConfig').val(Protocol);
+					$('#txtSMTPHostEmailConfig').val(smtp_host);
+					$('#txtSMTPortEmailConfig').val(smtp_port);
+					$('#txtNumberSendPerDate').val(NumberSendPerDate);
+					$('#txtPassword').val(Password);
+					$('#txtPasswordAgain').val(Password);
 					$('#txteditnote').val(note);
-					$("select#sbLevel option")
-						.each(function() { this.selected = (this.value == level); });
 					$("select#sbStatus option")
 						.each(function() { this.selected = (this.value == status); });
 						
@@ -159,46 +221,53 @@
 					return false;
 				}
 				
-				function saveinforemployee()
+				function saveinforemailconfig()
 				{
-				
+					if($('#txtPassword').val()!=$('#txtPasswordAgain').val())
+					{
+						alert("Mật khẩu xác nhận không đúng");
+						return;
+					}
 					$('#status-editemailconfig').html('<img border="0" alt="" src="<?php echo base_url()?>/img/loading_circle.gif"></img>');
 					$.ajax({
 					type: "POST",
-					url: "<?php echo base_url()?>index.php/manager/employee/editemployee",
-					data: { name: $('#txtFullNameemailconfig').val(), username:$('#txtUserNameemailconfig').val(), phone:$('#txtPhoneemailconfig').val(), note:$('#txteditnote').val(), level:$('#sbLevel :selected').val(), status:$('#sbStatus :selected').val() }
+					url: "<?php echo base_url()?>index.php/manager/emailconfig/editemailconfig",
+					data: { Email: $('#txtEmailEmailConfig').val(), Protocol:$('#txtProtocolEmailConfig').val(), smtp_host:$('#txtSMTPHostEmailConfig').val(),smtp_port:$('#txtSMTPortEmailConfig').val(),NumberSendPerDate:$('#txtNumberSendPerDate').val(), Password:$('#txtPassword').val(), note:$('#txteditnote').val(), status:$('#sbStatus :selected').val() },
+					dataType: "json"
 					})
 					.done(function( msg ) {
-						if(msg=="2"){
+						if(msg.ErrorCode=="0"){
 							window.open(window.location.pathname,"_self");
 						}
 						else {
-							$('#status-editemailconfig').html('<b>Có lỗi khi lưu dữ liệu</b>');
+							$('#status-editemailconfig').html('<b>'+msg.Infor+'</b>');
 						}
 					}) 
 					.fail(function() {
 						$('#status-editemailconfig').html('<b>Lỗi kết nối server</b>');
 					});
 				}
+				
 			</script>	
+			
 			<div id="editemailconfig-box" class="window-popup" align="center">
 				<a href="javascript:void(0)" class="close" onclick="return aeditemailconfigcloseclick();" ><img src="<?php echo base_url()?>img/close_pop.png" class="btn_close" title="Close Window" alt="Close" /></a>
 			  <form method="post" class="editnote" action="#">
-					<span style="color:#999; font-size:16px;"><b>Thông tin nhân viên viên</b></span><br/>
-					<span style="color:#999; font-size:11px;">Tên tài khoản</span><br/>
-					<input id="txtUserNameemailconfig" name="txtEmailemailconfig" type="text" value="" style="width:200px" readonly/><br/>
-					<span style="color:#999; font-size:11px;">Họ và tên</span><br/>
-					<input id="txtFullNameemailconfig" name="txtNameemailconfig" type="text" value="" style="width:200px" /><br/>
-					<span style="color:#999; font-size:11px;">Số điện thoại</span><br/>
-					<input id="txtPhoneemailconfig" name="txtPhoneemailconfig" type="text" value="" style="width:200px" /><br/>				
-					<span style="color:#999; font-size:11px;">Cấp bậc</span><br/>
-					<select  name="sbLevel" id="sbLevel" style="width:200px">
-							<option value="1">cấp 1</option>
-							<option value="2">cấp 2</option>
-							<option value="3">cấp 3</option>
-							<option value="4">cấp 4</option>
-							<option value="5">cấp 5</option>
-					</select><br/>
+					<span style="color:#999; font-size:16px;"><b>Thông tin cấu hình thử gửi</b></span><br/>
+					<span style="color:#999; font-size:11px;">Địa chỉ email</span><br/>
+					<input id="txtEmailEmailConfig" name="txtEmailEmailConfig" type="text" value="" style="width:200px" readonly/><br/>
+					<span style="color:#999; font-size:11px;">Protocol</span><br/>
+					<input id="txtProtocolEmailConfig" name="txtProtocolEmailConfig" type="text" value="" style="width:200px" /><br/>
+					<span style="color:#999; font-size:11px;">smtp host</span><br/>
+					<input id="txtSMTPHostEmailConfig" name="txtSMTPHostEmailConfig" type="text" value="" style="width:200px" /><br/>	
+					<span style="color:#999; font-size:11px;">smtp port</span><br/>
+					<input id="txtSMTPortEmailConfig" name="txtSMTPortEmailConfig" type="text" value="" style="width:200px" /><br/>				
+					<span style="color:#999; font-size:11px;">Số lượng gửi một ngày</span><br/>
+					<input id="txtNumberSendPerDate" name="txtNumberSendPerDate" type="text" value="" style="width:200px" /><br/>			
+					<span style="color:#999; font-size:11px;">Mật khẩu</span><br/>
+					<input id="txtPassword" name="txtPassword" type="password" value="" style="width:200px" /><br/>			
+					<span style="color:#999; font-size:11px;">Xác nhận mật khẩu</span><br/>
+					<input id="txtPasswordAgain" name="txtPasswordAgain" type="password" value="" style="width:200px" /><br/>
 					<span style="color:#999; font-size:11px;">Trạng thái</span><br/>
 					<select  name="sbStatus" id="sbStatus" style="width:200px">
 							<option value="1">Kích hoạt</option>
@@ -207,7 +276,7 @@
 					<span style="color:#999; font-size:11px;">Ghi chú</span><br/>
 					<textarea id="txteditnote" name="txteditnote" rows="4" cols="22" autocomplete="off" ></textarea>
 					<div id="status-editemailconfig" name="status-editemailconfig" style="color:red;font-size: 0.6em;"></div>
-					<button class="submit button" type="button"  onclick="saveinforemployee();return false;">Lưu</button>					
+					<button class="submit button" type="button"  onclick="saveinforemailconfig();return false;">Lưu</button>					
 					
 			  </form>
 			</div>
@@ -235,7 +304,7 @@
 					<th width="150px" class="sort_sign" onclick="setorderparameter('2')">Protocol</th>
 					<th width="150px" class="sort_sign" onclick="setorderparameter('3')">smtp_host</th>
 					<th width="100px" class="sort_sign" onclick="setorderparameter('4')">smtp_port</th>					
-					<th width="100px" class="sort_sign" onclick="setorderparameter('5')">Ngày thêm</th>					
+					<th width="100px" class="sort_sign" onclick="setorderparameter('5')">Ngày cập nhật</th>					
 					<th width="100px" class="sort_sign" onclick="setorderparameter('6')">Ngày vừa sử dụng</th>
 					<th width="80px" class="sort_sign" onclick="setorderparameter('7')">Số lượng gửi</th>
 					<th width="80px" class="sort_sign" onclick="setorderparameter('8')">Số lượng gửi một ngày</th>
@@ -267,12 +336,16 @@
 					
 					<td align="center">
 						<div>							
-							<a style="text-decoration:none;" href="javascript:void(0)" onclick="getdatatoedit('<?php echo $emailconfig['ID'];?>')">
+							<a style="text-decoration:none;" href="javascript:void(0)" onclick="getdatatoedit('<?php echo $emailconfig['Email'];?>')">
 								<img width="24px" height="24px" src="<?php echo base_url()?>img/actions/edit-content.png" title="Chính sửa liên lạc này" />
 							</a>
 							&#32;&#32;
 							<a style="text-decoration:none;" href="javascript:void(0)" >
 								<img width="24px" height="24px" src="<?php echo base_url()?>img/actions/delete.png" title="Xóa liên lạc này" />
+							</a>
+							&#32;&#32;
+							<a style="text-decoration:none;" href="javascript:void(0)" onclick="duplicateemailconfig('<?php echo $emailconfig['Email'];?>')">
+								Clone
 							</a>
 						</div>
 					</td>

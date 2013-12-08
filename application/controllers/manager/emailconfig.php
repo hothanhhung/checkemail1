@@ -85,13 +85,14 @@
 				if(isset($_POST["txtAddressEmailConfigAdd"]) && $_POST["txtAddressEmailConfigAdd"]!="" && isset($_POST["txtProtocolEmailConfigAdd"]) && $_POST["txtProtocolEmailConfigAdd"]!="" &&
 					isset($_POST["txtSMTPHostEmailConfigAdd"]) && $_POST["txtSMTPHostEmailConfigAdd"] !="" && isset($_POST["txtSMTPPortEmailConfigAdd"]) && $_POST["txtSMTPPortEmailConfigAdd"]!="")
 				{
-					if(isset($_POST["txtPasswordEmailConfigAdd"]) && isset($_POST["txtPasswordAgainEmailConfigAdd"])&&$_POST["txtPasswordEmailConfigAdd"]==$_POST["txtPasswordAgainEmailConfigAdd"])
-					{
-						$this->EmailConfig_Model->add($_POST["txtAddressEmailConfigAdd"],$_POST["txtProtocolEmailConfigAdd"],$_POST["txtSMTPHostEmailConfigAdd"],$_POST["txtSMTPPortEmailConfigAdd"],$_POST["txtNumberSendPerDateEmailConfigAdd"],$_POST["txtPasswordEmailConfigAdd"],$_POST["txtNoteEmailConfigAdd"],$_POST["sbStatusEmailConfigAdd"]);
-						$this->session->set_userdata('result_addemailconfig', 'Thêm thành công');
-					}
-					else $this->session->set_userdata('result_addemailconfig', 'Mật khẩu xác nhận không đúng');
-					
+					if($this->EmailConfig_Model->getEmailConfig($_POST["txtAddressEmailConfigAdd"])==false)
+						if(isset($_POST["txtPasswordEmailConfigAdd"]) && isset($_POST["txtPasswordAgainEmailConfigAdd"])&&$_POST["txtPasswordEmailConfigAdd"]==$_POST["txtPasswordAgainEmailConfigAdd"])
+						{
+							$this->EmailConfig_Model->add($_POST["txtAddressEmailConfigAdd"],$_POST["txtProtocolEmailConfigAdd"],$_POST["txtSMTPHostEmailConfigAdd"],$_POST["txtSMTPPortEmailConfigAdd"],$_POST["txtNumberSendPerDateEmailConfigAdd"],$_POST["txtPasswordEmailConfigAdd"],$_POST["txtNoteEmailConfigAdd"],$_POST["sbStatusEmailConfigAdd"]);
+							$this->session->set_userdata('result_addemailconfig', 'Thêm thành công');
+						}
+						else $this->session->set_userdata('result_addemailconfig', 'Mật khẩu xác nhận không đúng');
+					else $this->session->set_userdata('result_addemailconfig', 'Email này đã tồn tại');
 				}
 				else $this->session->set_userdata('result_addemailconfig', 'Thông tin không đủ');
 				header('Location: '. base_url('index.php/manager/emailconfig'));
@@ -100,6 +101,130 @@
 				header('Location: '. base_url('index.php/manager/index/login'));
 			}
 		}
+		
+		public function getinforemailconfig()
+		{
+			$manager = $this->session->userdata('managerlogin');
+			$managerlevel = $this->session->userdata('managerloginlevel');
+			$result = array();
+			
+			$result["ErrorCode"]="1";
+			$result["Infor"]="Lỗi không xác định";
+			
+			if(isset($manager) && $manager != "" && isset($managerlevel) && $managerlevel=="1")
+			{
+				if(isset($_POST["email"]))
+				{
+					$data = $this->EmailConfig_Model->getEmailConfig($_POST["email"]);
+					if($data==false)
+					{
+						$result["ErrorCode"]="1";
+						$result["Infor"]="Email không tồn tại";
+					}
+					else
+					{
+						$result["ErrorCode"]="0";
+						$result["Infor"]="Lấy thông tin thành công";
+						$result["Email"]=$data["Email"];
+						$result["Protocol"]=$data["Protocol"];
+						$result["smtp_host"]=$data["smtp_host"];
+						$result["smtp_port"]=$data["smtp_port"];
+						$result["NumberSendPerDate"]=$data["NumberSendPerDate"];
+						$result["Password"]=$data["Password"];
+						$result["Note"]=$data["Note"]==null?"":$data["Note"];
+						$result["Status"]=$data["Status"];
+					}
+				} 
+				else {
+					$result["ErrorCode"]="1";
+					$result["Infor"]="Không gửi thông tin email";
+				}
+			}else {
+				$result["ErrorCode"]="1";
+				$result["Infor"]="Không có quyền";
+			}
+			echo json_encode($result);
+		}
+		
+		public function addemailconfig()
+		{
+			$manager = $this->session->userdata('managerlogin');
+			$managerlevel = $this->session->userdata('managerloginlevel');
+			$result = array();
+			
+			$result["ErrorCode"]="1";
+			$result["Infor"]="Lỗi không xác định";
+			
+			if(isset($manager) && $manager != "" && isset($managerlevel) && $managerlevel=="1")
+			{
+				if(isset($_POST["Email"]))
+				{
+					$email = $_POST["Email"];
+					if($this->EmailConfig_Model->getEmailConfig($email)==false){
+						$protocol =$_POST["Protocol"];
+						$SMTPHost = $_POST["smtp_host"];
+						$SMTPPort = $_POST["smtp_port"];
+						$NumberSendPerDate = $_POST["NumberSendPerDate"];
+						$Password = $_POST["Password"];
+						$note = $_POST["note"];
+						$status = $_POST["status"];
+						$data = $this->EmailConfig_Model->add($email,$protocol,$SMTPHost,$SMTPPort,$NumberSendPerDate,$Password,$note,$status);
+						$result["ErrorCode"]="0";
+						$result["Infor"]="Lưu thành công";
+					}else{
+					$result["ErrorCode"]="1";
+					$result["Infor"]="Địa chỉ email đã tồn tại";
+				}
+			
+				} 
+				else {
+					$result["ErrorCode"]="1";
+					$result["Infor"]="Không gửi thông tin email";
+				}
+			}else {
+				$result["ErrorCode"]="1";
+				$result["Infor"]="Không có quyền";
+			}
+			echo json_encode($result);
+		}
+		
+		public function editemailconfig()
+		{
+			$manager = $this->session->userdata('managerlogin');
+			$managerlevel = $this->session->userdata('managerloginlevel');
+			$result = array();
+			
+			$result["ErrorCode"]="1";
+			$result["Infor"]="Lỗi không xác định";
+			
+			if(isset($manager) && $manager != "" && isset($managerlevel) && $managerlevel=="1")
+			{
+				if(isset($_POST["Email"]))
+				{
+					$email = $_POST["Email"];
+					$protocol =$_POST["Protocol"];
+					$SMTPHost = $_POST["smtp_host"];
+					$SMTPPort = $_POST["smtp_port"];
+					$NumberSendPerDate = $_POST["NumberSendPerDate"];
+					$Password = $_POST["Password"];
+					$note = $_POST["note"];
+					$status = $_POST["status"];
+					$data = $this->EmailConfig_Model->editEmailConfig($email,$protocol,$SMTPHost,$SMTPPort,$NumberSendPerDate,$Password,$status,$note);
+					$result["ErrorCode"]="0";
+					$result["Infor"]="Lưu thành công";
+			
+				} 
+				else {
+					$result["ErrorCode"]="1";
+					$result["Infor"]="Không gửi thông tin email";
+				}
+			}else {
+				$result["ErrorCode"]="1";
+				$result["Infor"]="Không có quyền";
+			}
+			echo json_encode($result);
+		}
+		
 		
 		
 		public function setorderparameter()

@@ -45,32 +45,49 @@
 				"NumberSentEmail"=>"0",
 				"NumberSendPerDate"=>$NumberSendPerDate,
 				"NumberSentEmailToday"=>"0",
+				"Password"=>$Password,
 				"Note"=>$note,
 				"Status"=>$status
 			);
 			$result=$this->db->insert('emailconfig',$data);	
 		}
-		/*
-		public function getPage($id)
+		
+		public function getEmailConfig($email)
 		{
-			$this->db->where("ID",$id);
-			$result=$this->db->get('general');
+			$this->db->where("Email",$email);
+			$result=$this->db->get('emailconfig');
 			$ss=$result->result_array();
 			if(isset($ss[0]))
 				return $ss[0];
 			return false;
 		}
 		
-		public function editPage($id, $title, $content)
+		
+		public function editEmailConfig($email,$protocol,$SMTPHost,$SMTPPort,$NumberSendPerDate,$Password,$status,$note) 
 		{
 			$data = array(
-				"Title" => $title,
-				"Content" => $content,
-				"UpdatedDate" => date('Y-m-d H:i:s')
+				"Protocol"=>$protocol,
+				"smtp_host"=>$SMTPHost,
+				"smtp_port"=>$SMTPPort,
+				"CreatedDate"=>date('Y-m-d H:i:s'),
+				"NumberSendPerDate"=>$NumberSendPerDate,
+				"Password"=>$Password,
+				"Note"=>$note,
+				"Status"=>$status
 			);
-			$this->db->where("ID",$id);
-			$result=$this->db->update('general',$data);			
+			$this->db->where("Email",$email);
+			$result=$this->db->update('emailconfig',$data);			
 		}
-		*/
+		
+		public function deleteEmailConfig($email) 
+		{
+			$data = array(
+				"CreatedDate"=>date('Y-m-d H:i:s'),
+				"Deleted"=>"1";
+			);
+			$this->db->where("Email",$email);
+			$result=$this->db->update('emailconfig',$data);			
+		}
+		
 	}
 ?>

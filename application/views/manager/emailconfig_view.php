@@ -49,7 +49,8 @@
 						</select>					
 					</td>
 					<td>								
-						<input id="btemailconfigAdd" value="Thêm email gửi thư" type="submit" onclick="addinforemailconfig(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
+						<input id="btemailconfigAdd" value="Thêm email" type="submit" onclick="addinforemailconfig(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
+						<input id="btcheckemailconfigAdd" value="Kiểm tra cấu hình" type="button" onclick="checkaddinforemailconfig(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
 					</td>
 				</tr></table>		
 				</b>
@@ -75,6 +76,35 @@
 			if(!isset($sort_order)) $sort_order="";
 		?>
 			<script type="text/javascript">	
+				function checkaddinforemailconfig()
+				{
+					if($('#txtPasswordEmailConfigAdd').val()!=$('#txtPasswordAgainEmailConfigAdd').val())
+					{
+						alert("Mật khẩu xác nhận không đúng");
+						return;
+					}
+					toemail=window.prompt("Nhập địa chỉ hộp thư đến","hfwtest01@gmail.com");
+					$('#status-emailconfigAdd').html('<img border="0" alt="" src="<?php echo base_url()?>/img/loading_circle.gif"></img>');
+					$.ajax({
+					type: "POST",
+					url: "<?php echo base_url()?>index.php/manager/emailconfig/checkemailconfig",
+					data: { Email: $('#txtAddressEmailConfigAdd').val(), Protocol:$(txtProtocolEmailConfigAdd).val(), smtp_host:$('#txtSMTPHostEmailConfigAdd').val(),smtp_port:$('#txtSMTPPortEmailConfigAdd').val(), Password:$('#txtPasswordEmailConfigAdd').val(), To:toemail},
+					dataType: "json"
+					})
+					.done(function( msg ) {
+						if(msg.ErrorCode=="1"){
+							//window.open(window.location.pathname,"_self");
+							alert(msg.Infor);
+							$('#status-emailconfigAdd').html('');
+						}
+						else {
+							$('#status-emailconfigAdd').html('<b>'+msg.Infor+'</b>');
+						}
+					}) 
+					.fail(function() {
+						$('#status-emailconfigAdd').html('<b>Lỗi kết nối server</b>');
+					});
+				}
 				
 				function addinforemailconfig()
 				{
@@ -248,6 +278,36 @@
 					});
 				}
 				
+				function checkinforemailconfig()
+				{
+					if($('#txtPassword').val()!=$('#txtPasswordAgain').val())
+					{
+						alert("Mật khẩu xác nhận không đúng");
+						return;
+					}
+					toemail=window.prompt("Nhập địa chỉ hộp thư đến","hfwtest01@gmail.com");
+					$('#status-editemailconfig').html('<img border="0" alt="" src="<?php echo base_url()?>/img/loading_circle.gif"></img>');
+					$.ajax({
+					type: "POST",
+					url: "<?php echo base_url()?>index.php/manager/emailconfig/checkemailconfig",
+					data: { Email: $('#txtEmailEmailConfig').val(), Protocol:$('#txtProtocolEmailConfig').val(), smtp_host:$('#txtSMTPHostEmailConfig').val(),smtp_port:$('#txtSMTPortEmailConfig').val(), Password:$('#txtPassword').val(), To:toemail},
+					dataType: "json"
+					})
+					.done(function( msg ) {
+						if(msg.ErrorCode=="1"){
+							//window.open(window.location.pathname,"_self");
+							alert(msg.Infor);
+							$('#status-editemailconfig').html('');
+						}
+						else {
+							$('#status-editemailconfig').html('<b>'+msg.Infor+'</b>');
+						}
+					}) 
+					.fail(function() {
+						$('#status-editemailconfig').html('<b>Lỗi kết nối server</b>');
+					});
+				}
+				
 			</script>	
 			
 			<div id="editemailconfig-box" class="window-popup" align="center">
@@ -276,7 +336,8 @@
 					<span style="color:#999; font-size:11px;">Ghi chú</span><br/>
 					<textarea id="txteditnote" name="txteditnote" rows="4" cols="22" autocomplete="off" ></textarea>
 					<div id="status-editemailconfig" name="status-editemailconfig" style="color:red;font-size: 0.6em;"></div>
-					<button class="submit button" type="button"  onclick="saveinforemailconfig();return false;">Lưu</button>					
+					<button class="submit button" type="button" style="width:90px"  onclick="saveinforemailconfig();return false;">Lưu</button>	
+					<button class="submit button" type="button" style="width:120px"  onclick="checkinforemailconfig();return false;">Kiểm tra cấu hình</button>		
 					
 			  </form>
 			</div>

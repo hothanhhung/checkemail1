@@ -69,12 +69,7 @@
 				header('Location: '. base_url('index.php/manager/index/login'));
 			}
 		}
-		
-		
-		
-						
-						   
-						   
+								   
 		
 		public function add()
 		{
@@ -225,7 +220,76 @@
 			echo json_encode($result);
 		}
 		
-		
+		public function checkemailconfig()
+		{
+			$manager = $this->session->userdata('managerlogin');
+			$managerlevel = $this->session->userdata('managerloginlevel');
+			$result = array();
+			
+			$result["ErrorCode"]="1";
+			$result["Infor"]="Lỗi không xác định";
+			
+			if(isset($manager) && $manager != "" && isset($managerlevel) && $managerlevel=="1")
+			{
+				if(isset($_POST["Email"]))
+				{
+					$email = $_POST["Email"];
+					$protocol =$_POST["Protocol"];
+					$SMTPHost = $_POST["smtp_host"];
+					$SMTPPort = $_POST["smtp_port"];
+					$Password = $_POST["Password"];
+					$To = isset($_POST["To"])?$_POST["To"]:"hfwtest01@gmail.com";
+					$this->_smtp_connect = @fsockopen($SMTPHost,
+										$SMTPPort,
+										$errnosave,
+										$errstrsave,
+										5);
+					if($errnosave!=0 || $this->_smtp_connect==false){
+						$result["ErrorCode"]="1";
+						$result["Infor"]="Không thể mở kết nối. Kiểm tra host và cổng SMTP";
+						echo json_encode($result);
+						return;
+					}
+					
+					
+					$config = array(
+								'protocol' => $protocol,
+								'smtp_host' => $SMTPHost,
+								'smtp_port' => $SMTPPort,
+								'smtp_user' => $email,
+								'smtp_pass' => $Password,//Nhớ đánh đúng user và pass nhé
+								'charset' => 'utf-8',
+								'mailtype'  => 'html',
+								'starttls'  => true,
+								'newline'   => "\r\n"
+						);
+						$this->load->library('email',$config);
+						
+
+						$this->email->from($email, $email);
+						$this->email->to($To);
+
+						$this->email->subject("test config");
+						$this->email->message('test config');
+					
+					
+						$data =	$this->email->send();
+						$result["ErrorCode"]="1";
+						if($data==true)
+							$result["Infor"]='Kiểm tra hộp thư đến. Nếu không thấy vui lòng kiểm tra protocol';
+						else $result["Infor"]='Có thể password hoặc địa chỉ hộp thư đến không đúng';
+					
+				} 
+				else {
+					$result["ErrorCode"]="1";
+					$result["Infor"]="Không gửi thông tin email";
+				}
+			}else {
+				$result["ErrorCode"]="1";
+				$result["Infor"]="Không có quyền";
+			}
+			echo json_encode($result);
+		}
 		
 		public function setorderparameter()
 		{

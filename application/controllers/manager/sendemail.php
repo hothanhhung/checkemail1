@@ -68,5 +68,32 @@
 		}
 		
 		
+		function sendEmailToContact($smtp_user,$smtp_pass,$protocol,$smtp_host,$smtp_port, $to)
+		{ 
+		
+			$config = array(
+					'protocol' => $protocol,
+					'smtp_host' => $smtp_host,
+					'smtp_port' => $smtp_port,
+					'smtp_user' => $smtp_user,
+					'smtp_pass' => $smtp_pass,//Nhớ đánh đúng user và pass nhé
+					'charset' => 'utf-8',
+					'mailtype'  => 'html',
+					'starttls'  => true,
+					'newline'   => "\r\n"
+			);
+			$this->load->library('email',$config);
+			
+
+			$this->email->from($smtp_user, $smtp_user);
+			$this->email->to($to);
+
+			$this->email->subject("test config");
+			$this->email->message('test config');
+
+			$this->email->send();
+
+			echo $this->email->print_debugger();
+		}
 	}
 ?>

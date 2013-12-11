@@ -83,7 +83,7 @@
 		{
 			$data = array(
 				"CreatedDate"=>date('Y-m-d H:i:s'),
-				"Deleted"=>"1";
+				"Deleted"=>"1"
 			);
 			$this->db->where("Email",$email);
 			$result=$this->db->update('emailconfig',$data);			

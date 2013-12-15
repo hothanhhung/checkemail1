@@ -1,0 +1,5 @@
+<?php return array (
+  'isRunning' => false,
+  'timeSleep' => 9,
+  'lastUpdateConfig' => '2013-12-15 00:23:41',
+) ;

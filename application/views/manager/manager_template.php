@@ -77,6 +77,11 @@
 										Cấu hình gửi thư
 									</li>
 								</a>
+								<a href="<?php echo base_url()?>index.php/manager/servicesendemail/">
+									<li>
+										Cấu hình service gửi thư
+									</li>
+								</a>
 							</ul>
 						</li>
 						<?php } ?>

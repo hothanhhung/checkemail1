@@ -18,6 +18,26 @@
             return $this->db->count_all_results('emailconfig');
         } 
 		
+		public function resetToday()
+		{
+			$query= 'update emailconfig set NumberSentEmailToday=0 where LastUsedDate!=CURDATE()';
+			$this->db->query($query);
+		}
+		
+		
+		public function getAvailable()
+		{
+			$query= 'select * from emailconfig where NumberSentEmailToday<=NumberSendPerDate and Status=1';
+			$result = $this->db->query($query);
+			return $result->result_array();
+		}
+		
+		public function setNumberOfSentEmail($email, $number)
+		{
+			$query= 'update emailconfig set NumberSentEmailToday=(NumberSentEmailToday+'.$number.'), NumberSentEmail=(NumberSentEmail+'.$number.'),LastUsedDate=CURDATE() where Email=='.$email.'';
+			$this->db->query($query);
+		}
+		
 		public function getAll($begin, $number=10, $sort_by=null, $sort_order=null, $filter=null)
 		{
 			if(!isset($begin) || $begin=='') $begin=0;

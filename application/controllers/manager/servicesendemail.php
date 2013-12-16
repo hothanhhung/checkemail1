@@ -62,6 +62,10 @@
 		
 		public function run()
 		{			
+			$this->load->model("Manager/EmailConfig_Model");
+			$this->load->model("member/Newsletter_Model");
+			$this->load->model("member/Contact_Model");
+			
 			$manager = $this->session->userdata('managerlogin');
 			$managerlevel = $this->session->userdata('managerloginlevel');
 			if(isset($manager) && $manager != "" && isset($managerlevel) && $managerlevel=="1")
@@ -77,9 +81,32 @@
 				while(true)
 				{
 					if($oldUpdate != ServiceConfigClass::getLastUpdateConfig()) break;
-				
+					/* ---------------Action service--------------------------------*/
+					//get emails which is available to send newsletter
+					$this->EmailConfig_Model->resetToday();
+					$listEmails = $this->EmailConfig_Model->getAvailable();
+					if(isset($listEmails))
+					{
+						// check newsletters which need to be sent
+						$listNewsletters = $this->Newsletter_Model->getNewsletterNeedSent();
+						if(isset($listNewsletters))
+						{
+							for($i=0; $i<count($listNewsletters); $i++)
+							{
+								$listEmailForNewsletter = $this->Contact_Model->getAllEmailsWithOutUser($listNewsletters[$i]["SendTo"]);
+								if(isset($listEmailForNewsletter))
+								{
+									//sendNewsletter($listNewsletters[$i],$listEmailForNewsletter, $listEmails );
+									 error_log(date('Y-m-d H:i:s').':'.$listNewsletters[$i]["ID"]." sent to \n", 3, 'log.log');
+								}
+								$this->Newsletter_Model->updateSendDataWithOutUser($listNewsletters[$i]["ID"],$listNewsletters[$i]["Period"]);
+							}
+						}
+					}
+					// error_log(date('Y-m-d H:i:s').'listEmails:  '.var_export($listEmails, true)."\n", 3, 'log.log');
+					// error_log(date('Y-m-d H:i:s').'listNewsletters:  '.var_export($listNewsletters, true)."\n", 3, 'log.log');
 				// do something
-				
+					/* ----------------End Action service---------------------------*/
 					$n++;
 					ServiceConfigClass::writeLogRun('service is sleeping ['.$ID.']['.$oldUpdate.']['.$sleeptime.']['.$n."]", 2);
 					sleep($sleeptime);

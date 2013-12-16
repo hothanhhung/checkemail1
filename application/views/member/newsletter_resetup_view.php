@@ -107,9 +107,10 @@
 					<label style="display: inline-block; width:100px; padding:5px 2px 6px 2px;">Định kỳ gửi</label>
 					<select id="slperiod" name="slperiod" style="width:200px" class="ui-multiselect ui-widget ui-state-default ui-corner-all">
 						<option value="0" <?php if($newsletter["Period"]==null || $newsletter["Period"]==0) echo "selected" ?>>Chỉ gửi 1 lần</option>
-						<option value="1" <?php if($newsletter["Period"]!=null && $newsletter["Period"]==1) echo "selected" ?>>Hàng tuần</option>
-						<option value="2" <?php if($newsletter["Period"]!=null && $newsletter["Period"]==2) echo "selected" ?>>Hàng tháng</option>
-						<option value="3" <?php if($newsletter["Period"]!=null && $newsletter["Period"]==3) echo "selected" ?>>Hàng năm</option>
+						<option value="1" <?php if($newsletter["Period"]!=null && $newsletter["Period"]==1) echo "selected" ?>>Hàng ngày</option>
+						<option value="2" <?php if($newsletter["Period"]!=null && $newsletter["Period"]==2) echo "selected" ?>>Hàng tuần</option>
+						<option value="3" <?php if($newsletter["Period"]!=null && $newsletter["Period"]==3) echo "selected" ?>>Hàng tháng</option>
+						<option value="4" <?php if($newsletter["Period"]!=null && $newsletter["Period"]==4) echo "selected" ?>>Hàng năm</option>
 					</select>
 					<br/> <br/>
 					<input id="issendnow" name="issendnow" type="hidden" value="0" />

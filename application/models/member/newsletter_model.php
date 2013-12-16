@@ -156,5 +156,32 @@
 			
 		}
 		
+		public function updateSendDataWithOutUser($ID, $cycle)
+		{
+			$next;
+			if($cycle=='1') $next = date('Y-m-d', strtotime('+1 day'));
+			else if($cycle=='2') $next = date('Y-m-d', strtotime('+7 day'));
+			else if($cycle=='3') $next = date('Y-m-d', strtotime('+1 month'));
+			else if($cycle=='4') $next = date('Y-m-d', strtotime('+1 year'));
+			$data = array(
+				   'LastRun' => date('Y-m-d H:i:s'),
+				   'NextRun' => (isset($next)?$next:null)
+						);
+
+			$this->db->where("ID",$ID);
+			$this->db->update('newsletter', $data); 
+			
+		}
+		
+		public function getNewsletterNeedSent()
+		{
+			$this->db->where('NextRun <=',date('Y-m-d H:i:s'));
+			$this->db->where('status',1);
+			$this->db->where('(Deleted is null or Deleted = 0)', null, false);
+			$result=$this->db->get('newsletter');
+			$ss=$result->result_array();
+			return $ss;
+		}
+		
 	}
 ?>

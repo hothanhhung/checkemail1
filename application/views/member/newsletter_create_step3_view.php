@@ -103,9 +103,10 @@
 				<label style="display: inline-block; width:100px; padding:5px 2px 6px 2px;">Định kỳ gửi</label>
 				<select id="slperiod" name="slperiod" style="width:200px" class="ui-multiselect ui-widget ui-state-default ui-corner-all">
 					<option value="0">Chỉ gửi 1 lần</option>
-					<option value="1">Hàng tuần</option>
-					<option value="2">Hàng tháng</option>
-					<option value="3">Hàng năm</option>
+					<option value="1">Hàng ngày</option>
+					<option value="2">Hàng tuần</option>
+					<option value="3">Hàng tháng</option>
+					<option value="4">Hàng năm</option>
 				</select>
 				<br/> <br/>
 					<input id="issendnow" name="issendnow" type="hidden" value="0" />

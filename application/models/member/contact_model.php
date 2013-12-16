@@ -37,6 +37,24 @@
 			return $result->result_array();
         } 
 		
+		
+		function getAllEmailsWithOutUser($filter=null)
+		{
+			$this->db->select("FullName");
+			$this->db->select("StoredEmail");
+			$this->db->where('(Deleted is null or Deleted = 0)', null, false);
+			if($filter!=null)
+			{
+				if(strpos($filter,',-1,') !== false)
+				{
+					$this->db->where("storedemail.CategoryID is null or POSITION(','+storedemail.CategoryID+',' IN ".$filter.") > 0 ", null, false);
+				}else
+					$this->db->where("POSITION(','+storedemail.CategoryID+',' IN '".$filter."') > 0 ", null, false);
+			}
+            $result=$this->db->get('storedemail');
+			return $result->result_array();
+        } 
+		
 		function deleteContactInFilter($user, $filter)
 		{
 			$data = array(

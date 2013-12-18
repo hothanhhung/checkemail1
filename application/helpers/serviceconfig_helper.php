@@ -42,7 +42,10 @@
 				array_push(self::$_listRunning,$ser);
 				if(count (self::$_listRunning) > 5) array_shift(self::$_listRunning);
 			}
-			else self::$_listRunning = array([0]=>$ser);
+			else {
+				self::$_listRunning = array();
+				array_push(self::$_listRunning,$ser);
+			}
 			
 			ReadAndWriteClass::write(self::$_filename, self::$_listRunning);
 		}

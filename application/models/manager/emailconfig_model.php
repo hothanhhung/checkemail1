@@ -34,7 +34,13 @@
 		
 		public function setNumberOfSentEmail($email, $number)
 		{
-			$query= 'update emailconfig set NumberSentEmailToday=(NumberSentEmailToday+'.$number.'), NumberSentEmail=(NumberSentEmail+'.$number.'),LastUsedDate=CURDATE() where Email=='.$email.'';
+			$query= 'update emailconfig set NumberSentEmailToday=(NumberSentEmailToday+'.$number.'), NumberSentEmail=(NumberSentEmail+'.$number.'),LastUsedDate=CURDATE() where Email="'.$email.'"';
+			$this->db->query($query);
+		}
+		
+		public function updateNumberOfSentEmail($email, $numberSentEmailToday, $numberSentEmail)
+		{
+			$query= 'update emailconfig set NumberSentEmailToday='.$numberSentEmailToday.', NumberSentEmail='.$numberSentEmail.', LastUsedDate=CURDATE() where Email="'.$email.'"';
 			$this->db->query($query);
 		}
 		

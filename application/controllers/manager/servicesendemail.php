@@ -81,40 +81,103 @@
 				while(true)
 				{
 					if($oldUpdate != ServiceConfigClass::getLastUpdateConfig()) break;
+					
+					$timeStart = date('YmdHis');
 					/* ---------------Action service--------------------------------*/
+					
 					//get emails which is available to send newsletter
 					$this->EmailConfig_Model->resetToday();
 					$listEmails = $this->EmailConfig_Model->getAvailable();
-					if(isset($listEmails))
+					if(isset($listEmails) && count($listEmails) > 0)
 					{
 						// check newsletters which need to be sent
 						$listNewsletters = $this->Newsletter_Model->getNewsletterNeedSent();
-						if(isset($listNewsletters))
+						if(isset($listNewsletters) && count($listNewsletters) > 0)
 						{
 							for($i=0; $i<count($listNewsletters); $i++)
 							{
-								$listEmailForNewsletter = $this->Contact_Model->getAllEmailsWithOutUser($listNewsletters[$i]["SendTo"]);
+								// get information of each Newsletter to send
+								$data = $listNewsletters[$i];
+								$listEmailForNewsletter = $this->Contact_Model->getAllEmailsWithOutUser($data["SendTo"]);
+								$user=$data["EmailUser"];
+								$username=$data["UserFullName"];
+								
 								if(isset($listEmailForNewsletter))
-								{
-									//sendNewsletter($listNewsletters[$i],$listEmailForNewsletter, $listEmails );
-									 error_log(date('Y-m-d H:i:s').':'.$listNewsletters[$i]["ID"]." sent to \n", 3, 'log.log');
+								{	
+									// run each email in inbox of the Newsletter
+									foreach($listEmailForNewsletter as $email)
+									{
+										// select email to handle send email
+										$j=0;
+										for($j=0; $j<count($listEmails); $j++)
+											if($listEmails[$j]['NumberSentEmailToday']<$listEmails[$j]['NumberSendPerDate']) break;
+										// send email
+										if($j<count($listEmails))
+										{
+											error_log(date('Y-m-d H:i:s').': '.$user.' sent to '.$email["StoredEmail"].' via '.$listEmails[$j]['Email']."\n", 3, 'log.log');
+											$this->sendEmailToContact($listEmails[$j], $user, $username, $email["StoredEmail"], $data["Subject"], str_replace('[[Name]]',' '.$email["FullName"],$data["Greet"])."<br/>".$data["Content"]);
+											// increase listEmails[$i]['NumberSentEmailToday']
+											$listEmails[$j]['NumberSentEmailToday']=$listEmails[$j]['NumberSentEmailToday']+1;
+											$listEmails[$j]['NumberSentEmail']=$listEmails[$j]['NumberSentEmail']+1;
+										}else 
+										{
+											error_log(date('Y-m-d H:i:s').": No email handle for sending email\n", 3, 'log.log');
+										}
+									}
+									 error_log(date('Y-m-d H:i:s').':'.$data["ID"]." sent to \n", 3, 'log.log');
 								}
-								$this->Newsletter_Model->updateSendDataWithOutUser($listNewsletters[$i]["ID"],$listNewsletters[$i]["Period"]);
+								$this->Newsletter_Model->updateSendDataWithOutUser($data["ID"],$data["Period"]);
+								
 							}
+							// update email handle
+							foreach($listEmails as $emailHandle)
+								$this->EmailConfig_Model->updateNumberOfSentEmail($emailHandle['Email'],$emailHandle['NumberSentEmailToday'],$emailHandle['NumberSentEmail']);
 						}
 					}
-					// error_log(date('Y-m-d H:i:s').'listEmails:  '.var_export($listEmails, true)."\n", 3, 'log.log');
-					// error_log(date('Y-m-d H:i:s').'listNewsletters:  '.var_export($listNewsletters, true)."\n", 3, 'log.log');
-				// do something
-					/* ----------------End Action service---------------------------*/
+					
+					/*--------------------------------End Action service---------------------------*/
+					
 					$n++;
 					ServiceConfigClass::writeLogRun('service is sleeping ['.$ID.']['.$oldUpdate.']['.$sleeptime.']['.$n."]", 2);
-					sleep($sleeptime);
+					
+					$timeEnd = date('YmdHis');
+					$timeForAction = $timeEnd - $timeStart;
+					
+					// go to sleep
+					if($timeForAction < $sleeptime) sleep($sleeptime - $timeForAction);
 					//if($oldUpdate != $serviceConfig->getLastUpdateConfig()) break;
 				}
 				ServiceConfigClass::writeLogRun('service stopped ['.$ID.']['.$oldUpdate.']['.$sleeptime."]", 3);
 				ServiceListClass::stop($ID);
 			}
+		}
+		
+		function sendEmailToContact($emailHandle, $from, $namefrom, $to, $sub, $cont)
+		{ 
+		
+			$config = array(
+					'protocol' => $emailHandle['Protocol'],
+					'smtp_host' => $emailHandle['smtp_host'],
+					'smtp_port' =>  $emailHandle['smtp_port'],
+					'smtp_user' =>  $emailHandle['Email'],
+					'smtp_pass' =>  $emailHandle['Password'],//Nhớ đánh đúng user và pass nhé
+					'charset' => 'utf-8',
+					'mailtype'  => 'html',
+					'starttls'  => true,
+					'newline'   => "\r\n"
+			);
+			$this->load->library('email',$config);
+			
+
+			$this->email->from($from, $namefrom);
+			$this->email->to($to);
+
+			$this->email->subject($sub);
+			$this->email->message($cont);
+
+			$this->email->send();
+
+			//echo $this->email->print_debugger();
 		}
 		
 		public function stop()

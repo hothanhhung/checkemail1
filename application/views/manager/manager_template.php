@@ -86,6 +86,7 @@
 						</li>
 						<?php } ?>
 						<li <?php if(isset($index)&&$index==3) echo 'style="background: #E6E6E6;"';?>>
+							<!--
 							<a href="#"  class="dropboxli">Quản lý template</a>
 							<ul class="sub-menu">
 								<a href="">
@@ -99,6 +100,7 @@
 									</li>
 								</a>
 							</ul>
+							-->
 						</li>						
 					</ul>
 				</td>

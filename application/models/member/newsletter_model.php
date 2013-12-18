@@ -172,7 +172,7 @@
 			$this->db->update('newsletter', $data); 
 			
 		}
-		
+		/*
 		public function getNewsletterNeedSent()
 		{
 			$this->db->where('NextRun <=',date('Y-m-d H:i:s'));
@@ -182,6 +182,14 @@
 			$ss=$result->result_array();
 			return $ss;
 		}
+		*/
 		
+		public function getNewsletterNeedSent()
+		{
+			$query= 'select newsletter.*, member.Name as UserFullName from newsletter, member';
+			$query.=' where newsletter.EmailUser = member.EmailAddress and newsletter.NextRun<="'.date('Y-m-d H:i:s').'" and newsletter.status=1 and ((newsletter.Deleted is null) OR (newsletter.Deleted = 0))';
+			$result=$this->db->query($query);
+			return $result->result_array();
+		}
 	}
 ?>

@@ -71,17 +71,32 @@
 			if(isset($manager) && $manager != "" && isset($managerlevel) && $managerlevel=="1")
 			{
 				$ID = ''.date('YmdHis').rand(1000 , 9999 );
+				$lastRun = ServiceConfigClass::getLastUpdateConfig();
 				ServiceConfigClass::wantToRun();
 				$oldUpdate = ServiceConfigClass::getLastUpdateConfig();
+				
+				if($lastRun == $oldUpdate) return; // double click
+				
 				$sleeptime = ServiceConfigClass::getTimeSleep();
 				
-				ServiceListClass::add($ID, $oldUpdate, $sleeptime, "Started");
+				ServiceListClass::add($ID, $oldUpdate, $sleeptime, "Starting");
 				ServiceConfigClass::writeLogRun('service starts ['.$ID.']['.$oldUpdate.']['.$sleeptime."]", 1);
 				$n=0;
 				while(true)
 				{
 					if($oldUpdate != ServiceConfigClass::getLastUpdateConfig()) break;
 					
+					// waiting for another service finish the action
+					ServiceListClass::wait($ID);
+					while(ServiceConfigClass::isTakingAction())
+					{
+						sleep(round($sleeptime / 2));
+						if($oldUpdate != ServiceConfigClass::getLastUpdateConfig()) break;
+					}
+					if($oldUpdate != ServiceConfigClass::getLastUpdateConfig()) break;
+					
+					ServiceConfigClass::takeAction();// get action
+					ServiceListClass::run($ID);
 					$timeStart = date('YmdHis');
 					/* ---------------Action service--------------------------------*/
 					
@@ -144,7 +159,13 @@
 					$timeForAction = $timeEnd - $timeStart;
 					
 					// go to sleep
-					if($timeForAction < $sleeptime) sleep($sleeptime - $timeForAction);
+					if($timeForAction < $sleeptime)
+					{
+						ServiceConfigClass::goToSleep();
+						ServiceListClass::sleep($ID);
+						sleep($sleeptime - $timeForAction);
+						
+					}
 					//if($oldUpdate != $serviceConfig->getLastUpdateConfig()) break;
 				}
 				ServiceConfigClass::writeLogRun('service stopped ['.$ID.']['.$oldUpdate.']['.$sleeptime."]", 3);
@@ -217,7 +238,7 @@
 						ServiceConfigClass::setTimeSleep($second);
 						
 						$result["ErrorCode"]="0";
-						$result["Infor"]="Đã cập nhật chu ky mới:".$secondstr;
+						$result["Infor"]="Đã cập nhật chu kỳ mới:".$secondstr;
 					}else 
 					{
 						$result["ErrorCode"]="1";
@@ -228,6 +249,31 @@
 					$result["ErrorCode"]="1";
 					$result["Infor"]="Không đủ quyền để thực hiện";
 				}
+			}
+			else 
+			{
+				$result["ErrorCode"]="1";
+				$result["Infor"]="Không đủ quyền để thực hiện";
+			}
+			echo json_encode($result);
+		}
+		
+		public function reset()
+		{
+			$manager = $this->session->userdata('managerlogin');
+			$managerlevel = $this->session->userdata('managerloginlevel');
+			$result = array();
+			
+			$result["ErrorCode"]="1";
+			$result["Infor"]="Lỗi không xác định";
+			
+			if(isset($manager) && $manager != "" && isset($managerlevel) && $managerlevel=="1")
+			{
+				ServiceConfigClass::reset();
+						
+				$result["ErrorCode"]="0";
+				$result["Infor"]="Đã reset service";
+		
 			}
 			else 
 			{

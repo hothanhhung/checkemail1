@@ -40,7 +40,7 @@
 			
 			if(isset(self::$_listRunning)){
 				array_push(self::$_listRunning,$ser);
-				if(count (self::$_listRunning) > 5) array_shift(self::$_listRunning);
+				if(count (self::$_listRunning) > 10) array_shift(self::$_listRunning);
 			}
 			else {
 				self::$_listRunning = array();
@@ -50,7 +50,27 @@
 			ReadAndWriteClass::write(self::$_filename, self::$_listRunning);
 		}
 		
+		public static function wait($ID)
+		{
+			 self::changeStatus($ID, "Waiting");
+		}
+		
 		public static function stop($ID)
+		{
+			 self::changeStatus($ID, "Stopped");
+		}
+		
+		public static function sleep($ID)
+		{
+			 self::changeStatus($ID, "Sleeping");
+		}
+		
+		public static function run($ID)
+		{
+			 self::changeStatus($ID, "Running");
+		}
+		
+		public static function changeStatus($ID, $status)
 		{
 			self::read();
 			
@@ -58,7 +78,7 @@
 				for($i = 0; $i<count(self::$_listRunning); $i++)
 					if(self::$_listRunning[$i]["ID"]==$ID)
 					{
-						self::$_listRunning[$i]["Status"]="Stopped";
+						self::$_listRunning[$i]["Status"]=$status;
 						self::$_listRunning[$i]["StatusChangeAt"]=date('Y-m-d H:i:s');				
 						break;						
 					}
@@ -71,6 +91,7 @@
 		static $_filename = "service\config";
 		static $_filenameRunLog = "run.log";
 		static $_isRunning;
+		static $_isSleeping;
 		static $_timeSleep;
 		static $_lastUpdateConfig;
 		
@@ -91,11 +112,13 @@
 				$config = ReadAndWriteClass::read(self::$_filename);
 				if(isset($config)){
 					self::$_isRunning = isset($config['isRunning'])? $config['isRunning'] : 'false';
+					self::$_isSleeping = isset($config['isSleeping'])? $config['isSleeping'] : 'true';
 					self::$_timeSleep = isset($config['timeSleep'])? $config['timeSleep'] : '600';
 					self::$_lastUpdateConfig = isset($config['lastUpdateConfig'])? $config['lastUpdateConfig'] : date("Y-m-d H:i:s");
 				
 				}else{
 					 self::$_isRunning = false;
+					 self::$_isSleeping = true;
 					 self::$_timeSleep = 600;
 					 self::$_lastUpdateConfig = date("Y-m-d H:i:s");
 					 self::save();
@@ -107,10 +130,23 @@
 			}
 		}
 		
+		public static function reset()
+		{
+			$config['isRunning'] = false;
+			$config['isSleeping'] = true;
+			//$config['timeSleep'] = 600;
+			$config['lastUpdateConfig'] = date("Y-m-d H:i:s");
+			
+			ReadAndWriteClass::write(self::$_filename,$config);
+		}
+		
 		public static function save()
 		{
 			if(!isset(self::$_isRunning)) self::$_isRunning = false;
 			$config['isRunning'] = self::$_isRunning;
+			
+			if(!isset(self::$_isSleeping)) self::$_isSleeping = true;
+			$config['isSleeping'] = self::$_isSleeping;
 			
 			if(!isset(self::$_timeSleep)) self::$_timeSleep = 600;
 			$config['timeSleep'] = self::$_timeSleep;
@@ -120,6 +156,27 @@
 			
 			ReadAndWriteClass::write(self::$_filename,$config);
 		}
+		
+		 public static function isTakingAction()
+		 {
+			self::read();
+			return self::$_isSleeping==false;
+		 }
+		 
+		 public static function goToSleep()
+		 {
+			self::read();
+			self::$_isSleeping = true;
+			self::save();
+		 }
+		 
+		 public static function takeAction()
+		 {
+			self::read();
+			self::$_isSleeping = false;
+			self::save();
+		 }
+		 
 		 public static function getLastUpdateConfig()
 		 {
 			self::read();

@@ -33,14 +33,36 @@
 					}, 3000);
 			}
 			
+			function btResetServiceChange_Click()
+			{
+				$('#status-editemailconfig').html('<img border="0" alt="" src="<?php echo base_url()?>/img/loading_circle.gif"></img>');
+				$.ajax({
+				type: "POST",
+				url: "<?php echo base_url()?>index.php/manager/servicesendemail/reset",
+				dataType: "json"
+				})
+				.done(function( msg ) {
+					if(msg.ErrorCode=="0"){
+						alert(msg.Infor);
+						window.open(window.location.pathname,"_self");
+					}else{
+						$('#status-editemailconfig').html('<b>'+msg.Infor+'</b>');
+					}
+				})
+				.fail(function() {
+					$('#status-editemailconfig').html('<b>Lỗi kết nối server</b>');
+				});
+			}
+			
 			function btStopServiceChange_Click()
 			{
 				$('#status-editemailconfig').html('<img border="0" alt="" src="<?php echo base_url()?>/img/loading_circle.gif"></img>');
 				$.ajax({
 				type: "POST",
 				url: "<?php echo base_url()?>index.php/manager/servicesendemail/stop",
+				dataType: "json"
 				})
-				.success(function() {
+				.done(function() {
 					window.open(window.location.pathname,"_self");
 				})
 				.fail(function() {
@@ -61,6 +83,9 @@
 					if(msg.ErrorCode=="0"){
 						//
 						alert(msg.Infor);
+						<?php if(isset ($IsRunning) && $IsRunning==true) { ?>
+						alert("Hãy chạy service khác để chạy cấu hình mới.\nService cũ đang bị dừng");
+						<?php } ?>
 						window.open(window.location.pathname,"_self");
 					}
 					else {
@@ -75,12 +100,13 @@
 		
 		<div style="padding:5px 5px 5px 5px; border:1px solid;border-radius:5px;border-color:gray;background-color:#ffsfef; " align="center">
 			Thời gian thay đổi cuối cùng <b><?php echo $LastConfig ?></b>. Chu kỳ chạy <b><?php echo $TimeSleep ?></b> giây.<br/>
-			Hiện tại <b><?php if(isset ($IsRunning) && $IsRunning==true) echo "đang chạy"; else echo "Đang dừng"?></b><br/>
+			Hiện tại <b><?php if(isset ($IsRunning) && $IsRunning==true) echo "đang hoạt động"; else echo "không hoạt động"?></b><br/>
 			<input id="txtCycleEmailConfig" name="txtCycleEmailConfig" type="text" value="<?php echo $TimeSleep ?>" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
 			<input id="btCycleEmailConfigEdit" value="Thay đổi chu kỳ" type="button" onclick="btCycleEmailConfigEdit_Click(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/><br/>
 			<input id="btStopServiceChange" name="btStopServiceChange" value="Dừng service" style="display:<?php if(isset ($IsRunning) && $IsRunning==true) echo "inline"; else echo "none"?>" type="button" onclick="btStopServiceChange_Click(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
 			<input id="btRunServiceChange" name="btRunServiceChange" value="Chạy service" style="display:<?php if(isset ($IsRunning) && $IsRunning==true) echo "none"; else echo "inline"?>" type="button" onclick="btRunServiceChange_Click(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
-			<input id="btRunServiceNow"  name="btRunServiceNow" value="Chạy service ngay" type="button" onclick="btRunServiceChange_Click(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
+			<input id="btRunServiceNow"  name="btRunServiceNow" value="Chạy service khác" style="display:<?php if(isset ($IsRunning) && $IsRunning==true) echo "inline"; else echo "none"?>"  type="button" onclick="btRunServiceChange_Click(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
+			<input id="btResetServiceNow"  name="btResetServiceNow" value="reset service" type="button" onclick="btResetServiceChange_Click(); return false;" class="ui-multiselect ui-widget ui-state-default ui-corner-all"/>
 			<div name="status-editemailconfig" id="status-editemailconfig" style="color:red;font-size: 0.9em;">
 			</div>
 		</div>

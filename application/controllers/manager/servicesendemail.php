@@ -62,7 +62,7 @@
 		
 		public function run()
 		{			
-			$this->load->model("Manager/EmailConfig_Model");
+			$this->load->model("manager/Emailconfig_Model");
 			$this->load->model("member/Newsletter_Model");
 			$this->load->model("member/Contact_Model");
 			
@@ -101,8 +101,8 @@
 					/* ---------------Action service--------------------------------*/
 					
 					//get emails which is available to send newsletter
-					$this->EmailConfig_Model->resetToday();
-					$listEmails = $this->EmailConfig_Model->getAvailable();
+					$this->Emailconfig_Model->resetToday();
+					$listEmails = $this->Emailconfig_Model->getAvailable();
 					if(isset($listEmails) && count($listEmails) > 0)
 					{
 						// check newsletters which need to be sent
@@ -146,7 +146,7 @@
 							}
 							// update email handle
 							foreach($listEmails as $emailHandle)
-								$this->EmailConfig_Model->updateNumberOfSentEmail($emailHandle['Email'],$emailHandle['NumberSentEmailToday'],$emailHandle['NumberSentEmail']);
+								$this->Emailconfig_Model->updateNumberOfSentEmail($emailHandle['Email'],$emailHandle['NumberSentEmailToday'],$emailHandle['NumberSentEmail']);
 						}
 					}
 					

@@ -1,4 +1,4 @@
- <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
   if(! function_exists('postPage'))
  {
@@ -204,4 +204,3 @@ if(! function_exists('jValidateEmailUsingSMTP'))
 
 	}
 }
-?>

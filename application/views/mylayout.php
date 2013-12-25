@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
+	<meta charset="utf-8" />
 	<?php 
 		if(isset($title))
 		{?>
@@ -9,7 +9,7 @@
 		<?php }else { ?>
 			<title>Internet Marketing Tools</title>
 		<?php } ?>
-	<link rel="shortcut icon" href="<?php echo base_url()?>favicon.ico" />
+	<link  rel="icon" type="image/x-icon" href="<?php echo base_url()?>favicon.ico" />
 	<link href="<?php echo base_url()?>css/main.css" rel="Stylesheet" type="text/css" />
 	<script src="<?php echo base_url()?>js/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript">
@@ -473,11 +473,7 @@
 					<a href="<?php echo base_url()?>index.php/member/index/" id="owndata" target="_blank">Email marketing</a>
 					<?php if(isset($index) && $index==3) echo '</strong>' ?>
 				</li>
-				<li>
-					<?php if(isset($index) && $index==4) echo '<strong>' ?>
-					<a href="" id="domain-name-system">DNS Query</a>
-					<?php if(isset($index) && $index==4) echo '</strong>' ?>
-				</li>
+				
 				<li>				
 					<?php if(isset($index) && $index==5) echo '<strong>' ?>
 					<a href="<?php echo base_url()?>index.php/general/faq" id="portscan">Câu hỏi thường gặp</a>
@@ -513,7 +509,6 @@
 
 	</div>
 
-	<div id="footer">Page rendered in <strong>{elapsed_time}</strong> seconds</div>
 </div>
 
 </body>

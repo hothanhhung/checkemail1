@@ -9,7 +9,7 @@
 		<?php }else { ?>
 			<title>Internet Marketing Tools</title>
 		<?php } ?>
-	<link rel="shortcut icon" href="<?php echo base_url()?>favicon.ico" />
+	<link  rel="icon" type="image/x-icon" href="<?php echo base_url()?>favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>plugin/multiselect/css/jquery.multiselect.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>plugin/multiselect/css/jquery.multiselect.filter.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>plugin/multiselect/assets/style.css" />

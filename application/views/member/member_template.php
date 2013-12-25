@@ -9,7 +9,7 @@
 		<?php }else { ?>
 			<title>Internet Marketing Tools</title>
 		<?php } ?>
-	<link rel="shortcut icon" href="<?php echo base_url()?>favicon.ico" />
+	<link  rel="icon" type="image/x-icon" href="<?php echo base_url()?>favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>plugin/multiselect/css/jquery.multiselect.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>plugin/multiselect/css/jquery.multiselect.filter.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>plugin/multiselect/assets/style.css" />
@@ -31,7 +31,7 @@
 		<div id="header" >
 			<h1>
 				<a href="<?php echo base_url()?>" style="text-decoration: none">
-					<img style="margin:0 0 0 40px;" src="<?php echo base_url()?>/img/banner1.png" />
+					<img style="margin:0 0 0 40px;" src="<?php echo base_url()?>/img/banner2.png" />
 				</a>
 			<a href="<?php echo base_url()?>index.php/member/index/logouttool" style="position:relative;top:-100px;left:600px; text-decoration: none"> 
 				<img  width="37px" height="37px" src="<?php echo base_url()?>img/logout.png"></img>
